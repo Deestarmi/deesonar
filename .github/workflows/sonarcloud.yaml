@@ -1,0 +1,27 @@
+name: SonarCloud Analysis
+on: 
+  push: 
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  sonarcloud:
+    runs-on: ubunut-latest
+    steps:
+      - name: Checkout code 
+        uses: actions/checkoout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run test with code coverage
+        run: pytest --cov=. --cov-report=xml
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{}}
+          SONAR_TOKEN
